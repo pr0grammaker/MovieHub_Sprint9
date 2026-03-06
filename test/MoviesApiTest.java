@@ -24,7 +24,7 @@ public class MoviesApiTest {
 
     @BeforeAll
     static void beforeAll() {
-        server = new MoviesServer(moviesStore);
+        server = new MoviesServer();
         server.start();
 
         client = HttpClient.newBuilder()

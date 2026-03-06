@@ -1,7 +1,7 @@
 import baseclasses.MoviesServer;
-import baseclasses.MoviesStore;
 import java.io.IOException;
 import java.net.URI;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.time.Year;
 import java.util.Scanner;
@@ -11,9 +11,8 @@ public class MovieHub {
     private final static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        MoviesStore moviesStore = new MoviesStore();
 
-        MoviesServer moviesServer = new MoviesServer(moviesStore);
+        MoviesServer moviesServer = new MoviesServer();
         System.out.println("Добро пожаловать в MovieHub: кинотеатр у вас в браузере");
 
         moviesServer.start();
@@ -21,17 +20,18 @@ public class MovieHub {
 
         while (true) {
 
-
             printmenu();
             int command = sc.nextInt();
             sc.nextLine();
 
             switch (command) {
+                
                 case 1 -> System.out.println("""
                         Для получения списка всех фильмов откройте поисковую строку браузера
                         и введите информацию следующего содержания:
                         http://localhost:8080/movies
                         """);
+
                 case 2 -> {
                     System.out.println("""
                             Для того чтобы добавить фильм введите название и год
@@ -53,8 +53,7 @@ public class MovieHub {
                             .POST(HttpRequest.BodyPublishers.ofString(json))
                             .build();
 
-                    try {
-                        var client = java.net.http.HttpClient.newHttpClient();
+                    try (HttpClient client = HttpClient.newHttpClient()) {
                         var response = client.send(request,
                                 java.net.http.HttpResponse.BodyHandlers.ofString());
 
@@ -86,7 +85,6 @@ public class MovieHub {
                             """, id);
                 }
 
-
                 case 4 -> {
                     System.out.println("""
                             Для удаления фильма по ID из списка всех фильмов введите его ID
@@ -112,7 +110,7 @@ public class MovieHub {
 
                         System.out.println("Статус: " + response.statusCode());
 
-                        if (response.statusCode() == 204){
+                        if (response.statusCode() == 204) {
                             System.out.println("Фильм успешно удален!");
                         } else {
                             System.out.println("Ответ сервера:");
@@ -146,17 +144,14 @@ public class MovieHub {
                     moviesServer.stop();
                     return;
                 }
+
                 default -> {
                     System.out.println("Неизвестная команда");
                     moviesServer.stop();
                     return;
                 }
             }
-
-
         }
-
-
     }
 
     public static void printmenu() {

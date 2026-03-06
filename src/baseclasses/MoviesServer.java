@@ -6,10 +6,9 @@ import java.net.InetSocketAddress;
 
 public class MoviesServer {
     private final HttpServer server;
-    private final MoviesStore moviesStore;
+    private final MoviesStore moviesStore = new MoviesStore();
 
-    public MoviesServer(MoviesStore moviesStore) {
-        this.moviesStore = moviesStore;
+    public MoviesServer() {
         try {
             server = HttpServer.create(new InetSocketAddress(8080), 0);
 
