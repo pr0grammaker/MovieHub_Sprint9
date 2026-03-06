@@ -6,9 +6,10 @@ import java.net.InetSocketAddress;
 
 public class MoviesServer {
     private final HttpServer server;
-    private final MoviesStore moviesStore = new MoviesStore();
+    private final MoviesStore moviesStore;
 
     public MoviesServer() {
+        this.moviesStore = new MoviesStore();
         try {
             server = HttpServer.create(new InetSocketAddress(8080), 0);
 
@@ -17,6 +18,10 @@ public class MoviesServer {
         } catch (IOException e) {
             throw new RuntimeException("Не удалось создать HTTP-сервер", e);
         }
+    }
+
+    public MoviesStore getMoviesStore() {
+        return moviesStore; // чтобы тесты могли получить ссылку на хранилище
     }
 
     public void start() {

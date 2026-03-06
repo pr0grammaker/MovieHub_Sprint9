@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MoviesApiTest {
     private static final String BASE = "http://localhost:8080";
-    private static final MoviesStore moviesStore = new MoviesStore();
+    private static MoviesStore moviesStore;
     private static MoviesServer server;
     private static HttpClient client;
 
@@ -26,6 +26,8 @@ public class MoviesApiTest {
     static void beforeAll() {
         server = new MoviesServer();
         server.start();
+
+        moviesStore = server.getMoviesStore();
 
         client = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(2))
@@ -46,11 +48,11 @@ public class MoviesApiTest {
 
     private String movieJson(String title, int year) {
         return """
-            {
-              "title": "%s",
-              "year": %d
-            }
-            """.formatted(title, year);
+                {
+                  "title": "%s",
+                  "year": %d
+                }
+                """.formatted(title, year);
     }
 
 

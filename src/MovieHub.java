@@ -25,7 +25,7 @@ public class MovieHub {
             sc.nextLine();
 
             switch (command) {
-                
+
                 case 1 -> System.out.println("""
                         Для получения списка всех фильмов откройте поисковую строку браузера
                         и введите информацию следующего содержания:
