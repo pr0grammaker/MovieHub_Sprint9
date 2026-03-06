@@ -1,0 +1,35 @@
+package baseclasses;
+import com.sun.net.httpserver.HttpServer;
+import handlers.MoviesHandler;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
+public class MoviesServer {
+    private final HttpServer server;
+    private final MoviesStore moviesStore;
+
+    public MoviesServer() {
+        this.moviesStore = new MoviesStore();
+        try {
+            server = HttpServer.create(new InetSocketAddress(8080), 0);
+
+            server.createContext("/movies", new MoviesHandler(moviesStore));
+
+        } catch (IOException e) {
+            throw new RuntimeException("Не удалось создать HTTP-сервер", e);
+        }
+    }
+
+    public MoviesStore getMoviesStore() {
+        return moviesStore; // чтобы тесты могли получить ссылку на хранилище
+    }
+
+    public void start() {
+        server.start();
+    }
+
+    public void stop() {
+        server.stop(0);
+        System.out.println("Сервер остановлен");
+    }
+}
